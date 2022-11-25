@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 
-DATABASE_URL="sqlite:///./storeData123.db"
+DATABASE_URL="sqlite:///./store_data.db"
 
 engine= create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=True)
 SessionLocal=sessionmaker(autocommit=False, autoflush=False, bind=engine)

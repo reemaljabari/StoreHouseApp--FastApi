@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, validator
 
-from typing import Optional
+
 
 class UserSchema(BaseModel):
     first_name:str=Field(max_length=15)
@@ -15,14 +15,21 @@ class UserSchema(BaseModel):
             "last_name":"aljabari",
             "email":"reem@gmail.com",
             "phone_number":"0799999999",
-            "Password":"12@345"
+            "Password":"12345678"
             }
         }
         orm_mode = True
     
 
+    @validator("email")
+    def email_validatoer(cls,value, values):
+        firstname_validate=values["first_name"]
+        if (not value.startswith(firstname_validate.lower())):
+            raise ValueError(" Email should start with your first name ")
+        return value
 
 
+    
 class UserLoginSchema(BaseModel):
     email:str = Field(max_length=100)
     Password:str = Field(min_length=8)
@@ -30,7 +37,7 @@ class UserLoginSchema(BaseModel):
         schema_extra={
             "example":{
             "email":"reem@gmail.com",
-            "Password": "12@345"
+            "Password": "12345678"
             }
         }
 
@@ -49,32 +56,7 @@ class Token(BaseModel):
     access_token:str
     token_type:str
 
-    class Config:
-        orm_mode=True
 
 
-
-
-class ProductSchema(BaseModel):
-    name:str
-    description:str=Field(min_length=10, default="Descirbe the product that you made ")
-    Quantity:int=Field(1)
-    price:float=Field(1.0)
-    currency:str=Field("JOD")
-    Image:Optional[str]
-    user_id:int
-
-
-
-class ProductInDB(ProductSchema):
-    class Config:
-            orm_mode = True
-
-
-class ProductUpdate(BaseModel):
-    description:str=Field(min_length=10, default="Descirbe the product that you made ")
-    Quantity:int=Field(1)
-    price:float=Field(1.0)
-    currency:str=Field("JOD")
     class Config:
         orm_mode=True

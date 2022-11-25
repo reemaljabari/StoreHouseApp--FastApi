@@ -6,8 +6,8 @@ from app.database import Base
 
 
 products_categuries=Table("products_categuries", Base.metadata,
-Column("product_id",ForeignKey("products.id")),
-Column("categury_id", ForeignKey("categuries.id"))
+Column("product_id",ForeignKey("products.id"), primary_key = True),
+Column("categury_id", ForeignKey("categuries.id"), primary_key = True)
 )
 
 class Product(Base):
@@ -16,20 +16,20 @@ class Product(Base):
     id=Column(Integer, primary_key=True, index=True)
     name=Column(String, index=True, nullable=False, unique=True)
     description=Column(String, nullable=True)
-    Quantity=Column(Integer, default=0)
+    quantity=Column(Integer, default=0)
     price=Column(Float, nullable=False)
     currency=Column(String, default="JOD", nullable=False)
-    Image=Column(String)
-    categuries=relationship("Categury", secondary="products_categuries", back_populates="products" )
+    image=Column(String)
     user_id=Column(Integer, ForeignKey("users.id"))
     product_creator=relationship("User", back_populates="products", uselist=False)
-
-
+    categuries=relationship("Categury", secondary="products_categuries", back_populates="products" )
+    
 class Categury(Base):
     __tablename__="categuries"
     id=Column(Integer, primary_key=True, index=True)
     name=Column(String,  nullable=False)
     products=relationship("Product", secondary="products_categuries", back_populates="categuries")
+
 
 
 class User(Base):

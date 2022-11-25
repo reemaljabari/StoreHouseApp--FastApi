@@ -6,7 +6,7 @@ from fastapi.security import APIKeyHeader
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import User
+
 
 
 
@@ -29,11 +29,9 @@ def decode_JWT(token:str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="ld not validate"
         )
-    print(payload)
     return payload
     
 def get_current_user(authorization: str = Security(APIKeyHeader(name='Authorization')), db:Session=Depends(get_db)):
     token=decode_JWT(token=authorization)
-    user=db.query(User).filter(User.id == token["user_id"]).first()
-    return user
+    return token
 
